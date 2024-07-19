@@ -8,6 +8,7 @@ import org.example.examserver.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -43,4 +44,34 @@ public class UserServiceImpl implements UserService {
 
         return local;
     }
+
+
+    //getting user by username
+    @Override
+    public User getUser(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        this.userRepository.deleteById(userId);
+    }
+
+    @Override
+    public User updateUser(User user, Long userId) {
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+
+        User existingUser = optionalUser.get();
+        existingUser.setUsername(user.getUsername());
+        existingUser.setFirstname(user.getFirstname());
+        existingUser.setLastname(user.getLastname());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setProfile(user.getProfile());
+        existingUser.setPhone(user.getPhone());
+
+        return this.userRepository.save(existingUser);
+    }
+
+
 }
